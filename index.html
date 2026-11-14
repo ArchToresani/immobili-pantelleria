@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Immobili Pantelleria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -81,7 +81,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 #holoDim .hseg button.on{background:#0E8FD1;color:#fff}
 #holoDim .hl span.hot{color:#06405F;font-size:12.5px;z-index:1}
 #holoDim .hbar label{display:flex;align-items:center;gap:5px;color:#E8F8FF;cursor:pointer}
-@media(max-width:820px){#holoDim .hbar{left:50%;top:8px;font-size:11px}#holoDim .hbar span{display:none}}
+#holoDim .hbar .ht{display:none}
+#holoDim .hx{width:26px;height:26px;border-radius:50%;border:1px solid rgba(30,182,255,.4);background:transparent;color:#E8F8FF;font-size:15px;line-height:1}
+#holoDim .hx:hover{background:rgba(30,182,255,.2)}
+.grab{display:none}
 @media(prefers-reduced-motion:reduce){#holoDim{animation:none}}
 .c-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
 .c-sum div{background:var(--panel-solid);padding:10px 14px}
@@ -118,7 +121,7 @@ a.tel:hover{text-decoration:underline}
 #layers label:hover{color:var(--text)}
 #layers input{accent-color:#3A3A38}
 #layers .sw{width:10px;height:10px;border-radius:2px}
-#layers.collapsed .body{display:none}
+#layers.collapsed .body{display:none!important}
 #views{position:fixed;right:16px;bottom:16px;z-index:5;display:flex;gap:6px;transition:right .35s}
 body.card-open #views{right:452px}
 #views button{padding:8px 12px;font-size:12.5px;border-radius:10px}
@@ -156,12 +159,70 @@ body.card-open #views{right:452px}
 #loading{position:fixed;inset:0;display:grid;place-items:center;z-index:20;background:var(--bg);color:var(--muted);transition:opacity .5s}
 #loading.gone{opacity:0;pointer-events:none}
 
+/* ---------- telefono in verticale ---------- */
 @media (max-width:820px){
-  #side{width:auto;right:16px;bottom:auto;max-height:46vh}
+  html,body{overscroll-behavior:none;touch-action:manipulation}
+  :root{--st:env(safe-area-inset-top,0px); --sb:env(safe-area-inset-bottom,0px)}
+  #side{top:0;left:0;right:0;bottom:0;width:auto;padding:calc(var(--st) + 8px) 8px calc(var(--sb) + 8px);justify-content:space-between;gap:8px}
+  .brand{padding:10px 14px 9px;align-self:flex-start;max-width:calc(100% - 96px)}
+  .brand h1{font-size:16px}
+  .brand .sub{font-size:12px;margin-top:2px}
+  .brand #today{display:none}
   .kpis{display:none}
-  #card{left:16px;width:auto;top:auto;height:62vh}
-  #layers{left:16px;bottom:16px}
-  #views{display:none}
+  .list{flex:none;max-height:36dvh}
+  .list-head{padding:10px}
+  .f{padding:7px 12px;font-size:13px}
+  body.card-open #side .list{display:none}
+  /* scheda immobile: foglio dal basso, riducibile con la maniglia */
+  #card{left:0;right:0;top:auto;bottom:0;width:auto;height:58dvh;border-radius:18px 18px 0 0;border-bottom:0;transform:translateY(105%);padding-bottom:var(--sb)}
+  #card.min{height:auto}
+  #card.min .c-sum,#card.min .tabs,#card.min .c-body{display:none}
+  #card.min .c-head{border-bottom:0}
+  .grab{display:block;position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:26px;border:0;background:transparent;padding:0}
+  .grab::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:rgba(30,30,30,.25);margin:8px auto 0}
+  .c-head{padding:26px 16px 12px}
+  .c-head h2{font-size:20px;padding-right:48px}
+  .close{width:40px;height:40px;top:18px;right:12px;font-size:20px}
+  .holo-btn{padding:10px 16px;font-size:14px}
+  .c-sum div{padding:8px 12px}
+  .tabs{padding:4px 6px 0;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:12px 12px 12px;font-size:14px}
+  .c-body{padding:14px 16px 24px;-webkit-overflow-scrolling:touch}
+  .ed{padding:9px}
+  .inl,.c-head h2 .inl,.c-head .meta .inl,.zhead .inl{font-size:16px}   /* sotto 16px iOS ingrandisce la pagina quando scrivi */
+  /* comandi mappa: riga in alto, livelli a destra */
+  #views{display:flex;left:8px;right:8px;top:calc(var(--st) + 74px);bottom:auto;overflow-x:auto;scrollbar-width:none;transition:none}
+  #views::-webkit-scrollbar{display:none}
+  body.card-open #views{right:8px}
+  #views button{padding:9px 13px;font-size:13px;white-space:nowrap;flex:none}
+  #layers{left:auto;right:8px;top:calc(var(--st) + 8px);bottom:auto;min-width:0;padding:11px 13px;max-height:70dvh;overflow:auto;z-index:6}
+  #layers:not(.collapsed){min-width:230px}
+  #layers .lt{gap:10px;font-size:12px}
+  #layers label{font-size:14px;padding:5px 0}
+  .maplibregl-ctrl-bottom-right,.maplibregl-ctrl-bottom-left,.maplibregl-ctrl-top-right{display:none}
+  /* planimetria: resta solo la barra dei comandi */
+  body.holo #side .brand,body.holo #views,body.holo #layers{display:none}
+  #holoDim .hbar{left:8px;right:8px;top:calc(var(--st) + 8px);transform:none;border-radius:14px;flex-wrap:wrap;justify-content:space-between;gap:8px 10px;padding:8px 10px;white-space:normal}
+  #holoDim .hbar>span{display:none}
+  #holoDim .hbar .ht{display:block;order:9;width:100%;text-align:center;font-size:12px;color:#9BDCF8}
+  #holoDim .hseg button{padding:9px 16px;font-size:13px}
+  #holoDim .hbar label{font-size:13px;padding:6px 2px}
+  #holoDim .hx{width:36px;height:36px;font-size:18px}
+}
+/* telefono in orizzontale: pannelli più stretti */
+@media (min-width:821px) and (max-height:500px){
+  #side{width:250px;top:8px;left:8px;bottom:8px;gap:8px}
+  .kpis{display:none}
+  .brand{padding:10px 14px}
+  .brand h1{font-size:16px}
+  #card{width:320px;top:8px;right:8px;bottom:8px}
+  .c-head{padding:12px 14px 10px}
+  .c-head h2{font-size:18px}
+  #layers{left:266px;bottom:8px;max-height:80vh;overflow:auto}
+  #views{bottom:8px;right:8px}
+  body.card-open #views{display:none}
+  #holoDim .hbar>span{display:none}
 }
 </style>
 </head>
@@ -198,7 +259,9 @@ body.card-open #views{right:452px}
   <canvas></canvas><div class="hl"></div>
   <div class="hbar"><span>Sinistro: sposta · destro: ruota · rotella: zoom · doppio clic: ricentra · Esc: chiudi</span>
     <div class="hseg"><button data-hs="plastico" class="on">Plastico</button><button data-hs="ologramma">Ologramma</button></div>
-    <label><input type="checkbox" id="holoLbl" checked> Nomi vani</label></div>
+    <label><input type="checkbox" id="holoLbl" checked> Nomi vani</label>
+    <button class="hx" id="holoX" aria-label="Chiudi planimetria">×</button>
+    <span class="ht">Un dito ruota · due dita spostano e ingrandiscono</span></div>
 </div>
 
 <script src="data/fabbricati.js"></script>
@@ -332,7 +395,7 @@ document.getElementById('items').addEventListener('click',e=>{
 renderFilters(); renderList();
 
 /* ---------- card ---------- */
-let tab = 'panoramica';
+let tab = 'panoramica', cardMin = false;
 function renderCard(){
   const i = IM.find(x=>x.id===selected); const card = document.getElementById('card');
   if(!i){ card.classList.remove('open'); document.body.classList.remove('card-open'); return; }
@@ -391,6 +454,7 @@ function renderCard(){
   }
   card.innerHTML = `
     <div class="c-head">
+      <button class="grab" id="cGrab" aria-label="Riduci o espandi la scheda"></button>
       <button class="close" id="cClose" aria-label="Chiudi">×</button>
       ${pill(i.stato)}
       <h2><span id="nmTxt">${esc(i.nome)}</span><button class="ed" id="edNome" title="Rinomina immobile" aria-label="Rinomina immobile">${PENCIL}</button></h2>
@@ -404,6 +468,8 @@ function renderCard(){
     </div>
     <div class="tabs">${tabs.map(([k,l,n])=>`<button class="tab ${tab===k?'on':''}" data-t="${k}">${l}${n!=null?`<sup>${n}</sup>`:''}</button>`).join('')}</div>
     <div class="c-body">${body}</div>`;
+  card.classList.toggle('min', cardMin);
+  card.querySelector('#cGrab').onclick = ()=>{ cardMin = !cardMin; renderCard(); };
   card.querySelector('#cClose').onclick = ()=>select(null);
   card.querySelector('#edNome').onclick = ()=>inlineEdit(card.querySelector('#nmTxt'), i.nome, v=>renameImmobile(i.id, v));
   card.querySelector('#edZona').onclick = ()=>inlineEdit(card.querySelector('#znTxt'), zonaNome(i.zona), v=>renameZona(i.zona, v));
@@ -412,7 +478,9 @@ function renderCard(){
 }
 
 /* ---------- map ---------- */
-const ISLAND = {center:[11.985,36.785], zoom:11.4, pitch:58, bearing:-18};
+const ISLAND = matchMedia('(max-width:820px)').matches
+  ? {center:[11.985,36.765], zoom:10.6, pitch:50, bearing:-18}   // telefono: isola intera sopra l'elenco
+  : {center:[11.985,36.785], zoom:11.4, pitch:58, bearing:-18};
 const TERRARIUM = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png';
 
 // Terrain without sea floor: every pixel below 0 m is flattened to sea level.
@@ -602,6 +670,15 @@ let holo = false;
 const HV = {style:'plastico', az:-.6, el:.62, dist:60, auto:true, raf:null, renderer:null, built:{}, cur:null};
 const hasPlan = i => !!(window.PLANIMETRIE && window.PLANIMETRIE[i.id]) && !!window.THREE;
 const holoDim = document.getElementById('holoDim'), holoLab = holoDim.querySelector('.hl');
+const PHONE = matchMedia('(max-width:820px)');
+// margini della mappa lasciati liberi dai pannelli, letti dalla pagina (telefono: fogli in alto e in basso)
+function mapPad(){
+  const card = document.getElementById('card'), open = card.classList.contains('open');
+  if(PHONE.matches) return {top:110, bottom:(open ? card.offsetHeight : document.querySelector('#side .list').offsetHeight) + 16, left:0, right:0};
+  return {left:document.getElementById('side').getBoundingClientRect().right + 20, right:open ? card.offsetWidth + 36 : 20, top:0, bottom:0};
+}
+// distanza di partenza: su schermi stretti e alti ci si allontana, così la pianta sta in larghezza
+const holoBase = R => R*Math.max(5.2, 3.9*innerHeight/innerWidth);
 // volo con quota del terreno interpolata (vedi map.on('move') più sotto)
 let FLIGHT = null;
 function flyTerrain(opts){
@@ -720,7 +797,9 @@ function setHolo(on, quiet){
   const i = IM.find(x=>x.id===selected);
   holo = !!on && !!i && hasPlan(i);
   cancelAnimationFrame(HV.raf);
-  holoDim.hidden = !holo;
+  holoDim.hidden = !holo; document.body.classList.toggle('holo', holo);
+  if(PHONE.matches) cardMin = holo;   // sul telefono la scheda si riduce per lasciare spazio alla planimetria
+  if(!quiet) renderCard();
   if(holo){
     if(!HV.renderer){
       HV.pr = Math.min(devicePixelRatio||1, 2);
@@ -729,17 +808,17 @@ function setHolo(on, quiet){
       HV.renderer.shadowMap.enabled = true; HV.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
     HV.cur = holoBuild(i, HV.style);
-    HV.dist = HV.cur.R*5.2; HV.az = -.6; HV.el = .5; HV.auto = true; HV.cur.off.set(0,0,0);
+    HV.dist = holoBase(HV.cur.R); HV.az = -.6; HV.el = .5; HV.auto = true; HV.cur.off.set(0,0,0);
     holoLab.replaceChildren(...HV.cur.labels.map(l=>l.el));
     HV.raf = requestAnimationFrame(holoFrame);
     if(!quiet){
       // l'edificio va nella parte bassa dello schermo: sopra resta lo spazio per l'ologramma
-      const pad = window.innerWidth>820 ? {left:360,right:440,top:innerHeight*.55,bottom:20} : {top:innerHeight*.3,bottom:innerHeight*.5};
+      const pad = {...mapPad(), top:innerHeight*(PHONE.matches?.5:.55)}; if(!PHONE.matches) pad.bottom = 20;
       flyTerrain({center:i.centro,zoom:18.6,pitch:60,bearing:map.getBearing(),padding:pad,duration:1400,essential:true});
     }
   }
-  if(!quiet) renderCard();
 }
+const holoClamp = d => HV.cur ? Math.max(HV.cur.R*2, Math.min(holoBase(HV.cur.R)*2, d)) : d;
 function holoStyle(style){
   HV.style = style;
   document.querySelectorAll('#holoDim [data-hs]').forEach(b=>b.classList.toggle('on', b.dataset.hs===style));
@@ -762,23 +841,32 @@ function holoStyle(style){
   };
   holoDim.addEventListener('pointerleave', ()=>hover(null));
   holoDim.querySelectorAll('[data-hs]').forEach(b=>b.onclick = ()=>{ hover(null); holoStyle(b.dataset.hs); });
+  // mouse: sinistro sposta, destro (o Ctrl/Maiusc) ruota · touch: un dito ruota, due dita spostano e ingrandiscono
+  const pts = new Map(); let rot = false, moved = 0, pinch = null;
+  const two = ()=>{ const [a,b] = [...pts.values()]; return {d:Math.hypot(a.x-b.x, a.y-b.y)||1, cx:(a.x+b.x)/2, cy:(a.y+b.y)/2}; };
+  const panBy = (dx,dy)=>{ const b = HV.cur; if(!b) return; const m = b.camera.matrixWorld.elements, k = 2*HV.dist*Math.tan(16*Math.PI/180)/innerHeight;
+    b.off.x += (m[0]*dx - m[4]*dy)*k; b.off.y += (m[1]*dx - m[5]*dy)*k; b.off.z += (m[2]*dx - m[6]*dy)*k;
+    b.off.y = Math.max(-b.H*.6, b.off.y); b.off.clampLength(0, b.R*3); };
   holoDim.addEventListener('pointerdown', e=>{ if(e.target.closest('.hbar')) return;
-    // tasto sinistro (o un dito): sposta · tasto destro, oppure sinistro con Ctrl/Maiusc: ruota
-    const rot = e.button===2 || e.ctrlKey || e.shiftKey;
-    drag = {x:e.clientX, y:e.clientY, rot}; HV.auto = false; holoDim.setPointerCapture(e.pointerId); holoDim.classList.add('drag'); });
-  holoDim.addEventListener('pointermove', e=>{ if(!drag){ hover(e); return; }
-    const dx = e.clientX-drag.x, dy = e.clientY-drag.y;
-    if(drag.rot){ HV.az -= dx*.008; HV.el = Math.max(.04, Math.min(1.5, HV.el + dy*.006)); }
-    else if(HV.cur){ const b = HV.cur, m = b.camera.matrixWorld.elements, k = 2*HV.dist*Math.tan(16*Math.PI/180)/innerHeight;
-      b.off.x += (m[0]*dx - m[4]*dy)*k; b.off.y += (m[1]*dx - m[5]*dy)*k; b.off.z += (m[2]*dx - m[6]*dy)*k;
-      b.off.y = Math.max(-b.H*.6, b.off.y); b.off.clampLength(0, b.R*3); }
-    drag.x = e.clientX; drag.y = e.clientY; });
+    pts.set(e.pointerId, {x:e.clientX, y:e.clientY}); moved = 0; HV.auto = false;
+    rot = e.pointerType==='touch' ? true : (e.button===2 || e.ctrlKey || e.shiftKey);
+    pinch = pts.size===2 ? two() : null;
+    try{ holoDim.setPointerCapture(e.pointerId); }catch(_){}
+    holoDim.classList.add('drag'); });
+  holoDim.addEventListener('pointermove', e=>{ const p = pts.get(e.pointerId); if(!p){ hover(e); return; }
+    const dx = e.clientX-p.x, dy = e.clientY-p.y; p.x = e.clientX; p.y = e.clientY; moved += Math.abs(dx)+Math.abs(dy);
+    if(pts.size>=2 && pinch){ const t = two(); HV.dist = holoClamp(HV.dist*pinch.d/t.d); panBy(t.cx-pinch.cx, t.cy-pinch.cy); pinch = t; }
+    else if(rot){ HV.az -= dx*.008; HV.el = Math.max(.04, Math.min(1.5, HV.el + dy*.006)); }
+    else panBy(dx,dy); });
   holoDim.addEventListener('contextmenu', e=>e.preventDefault());
-  const end = ()=>{ drag = null; holoDim.classList.remove('drag'); };
+  const end = e=>{ if(!pts.delete(e.pointerId)) return; pinch = null;
+    if(moved < 6 && e.type==='pointerup') hover(e);          // tocco senza trascinare: evidenzia il vano
+    if(!pts.size) holoDim.classList.remove('drag'); };
   holoDim.addEventListener('pointerup', end); holoDim.addEventListener('pointercancel', end);
+  document.getElementById('holoX').onclick = ()=>setHolo(false);
   holoDim.addEventListener('wheel', e=>{ e.preventDefault(); if(!HV.cur) return; HV.auto = false;
-    HV.dist = Math.max(HV.cur.R*2, Math.min(HV.cur.R*10, HV.dist*Math.exp(e.deltaY*.0012))); }, {passive:false});
-  holoDim.addEventListener('dblclick', e=>{ if(e.target.closest('.hbar') || !HV.cur) return; HV.dist = HV.cur.R*5.2; HV.az = -.6; HV.el = .5; HV.auto = true; HV.cur.off.set(0,0,0); });
+    HV.dist = holoClamp(HV.dist*Math.exp(e.deltaY*.0012)); }, {passive:false});
+  holoDim.addEventListener('dblclick', e=>{ if(e.target.closest('.hbar') || !HV.cur) return; HV.dist = holoBase(HV.cur.R); HV.az = -.6; HV.el = .5; HV.auto = true; HV.cur.off.set(0,0,0); });
 })();
 
 function updateFilterOnMap(){
@@ -791,7 +879,7 @@ function updateFilterOnMap(){
 
 function select(id, fly){
   if(id!==selected && holo){ selected = null; setHolo(false, true); }
-  selected = id; tab = 'panoramica';
+  selected = id; tab = 'panoramica'; cardMin = false;
   renderList(); renderCard();
   document.querySelectorAll('.mk:not(.grp)').forEach(m=>m.classList.toggle('sel', m.dataset.id===id));
   if(map.getLayer('lotti_f')){
@@ -800,7 +888,7 @@ function select(id, fly){
   }
   if(id && fly){
     const i = IM.find(x=>x.id===id);
-    const pad = window.innerWidth>820 ? {left:360,right:440,top:0,bottom:0} : {bottom:window.innerHeight*.55};
+    const pad = mapPad();
     flyTerrain({center:i.centro,zoom:18,pitch:62,bearing:map.getBearing(),padding:pad,duration:2200,essential:true});
   }
 }
@@ -818,7 +906,7 @@ document.getElementById('layersToggle').onclick=()=>{
   const L=document.getElementById('layers'); L.classList.toggle('collapsed');
   document.getElementById('lchev').textContent = L.classList.contains('collapsed')?'▸':'▾';
 };
-if(window.innerWidth<=820) document.getElementById('layers').classList.add('collapsed');
+if(PHONE.matches){ document.getElementById('layers').classList.add('collapsed'); document.getElementById('lchev').textContent = '▸'; }
 
 /* ---------- view buttons ---------- */
 document.getElementById('vIsland').onclick=()=>{ select(null); flyTerrain({...ISLAND,padding:{left:0,right:0,top:0,bottom:0},duration:2200}); };
