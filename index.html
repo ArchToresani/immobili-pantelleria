@@ -85,6 +85,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #holoDim .hx{width:26px;height:26px;border-radius:50%;border:1px solid rgba(30,182,255,.4);background:transparent;color:#E8F8FF;font-size:15px;line-height:1}
 #holoDim .hx:hover{background:rgba(30,182,255,.2)}
 .grab{display:none}
+.lband{display:none}
 @media(prefers-reduced-motion:reduce){#holoDim{animation:none}}
 .c-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
 .c-sum div{background:var(--panel-solid);padding:10px 14px}
@@ -170,6 +171,14 @@ body.card-open #views{right:452px}
   .brand #today{display:none}
   .kpis{display:none}
   .list{flex:none;max-height:36dvh}
+  /* elenco immobili riducibile a una banda in basso */
+  .lband{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;width:100%;border:0;background:transparent;
+    padding:18px 16px 10px;font-size:14px;font-weight:600;text-align:left}
+  .lband::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:40px;height:5px;border-radius:3px;background:rgba(30,30,30,.25)}
+  .lband .lchv{color:var(--muted);font-size:13px}
+  .list.min .lband{padding-bottom:14px}
+  .list.min .list-head,.list.min .items{display:none}
+  .list:not(.min) .list-head{padding-top:2px}
   .list-head{padding:10px}
   .f{padding:7px 12px;font-size:13px}
   body.card-open #side .list{display:none}
@@ -237,6 +246,7 @@ body.card-open #views{right:452px}
   </div>
   <div class="kpis glass" id="kpis"></div>
   <div class="list glass">
+    <button class="lband" id="lBand" aria-expanded="true"><span id="lBandT">Immobili</span><span class="lchv" aria-hidden="true">▾</span></button>
     <div class="list-head" id="filters"></div>
     <div class="items" id="items"></div>
   </div>
@@ -906,6 +916,12 @@ document.getElementById('layersToggle').onclick=()=>{
   const L=document.getElementById('layers'); L.classList.toggle('collapsed');
   document.getElementById('lchev').textContent = L.classList.contains('collapsed')?'▸':'▾';
 };
+document.getElementById('lBandT').textContent = 'Immobili · ' + IM.length;
+document.getElementById('lBand').onclick = e=>{
+  const l = document.querySelector('#side .list'), min = l.classList.toggle('min');
+  e.currentTarget.setAttribute('aria-expanded', String(!min)); e.currentTarget.querySelector('.lchv').textContent = min ? '▴' : '▾';
+};
+if(PHONE.matches) document.getElementById('lBand').click();   // sul telefono l'elenco parte ridotto a banda
 if(PHONE.matches){ document.getElementById('layers').classList.add('collapsed'); document.getElementById('lchev').textContent = '▸'; }
 
 /* ---------- view buttons ---------- */
